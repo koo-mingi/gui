@@ -106,9 +106,7 @@ public class JTableTest3 extends JFrame implements ActionListener{
 		if(cmd.equals("입력")) { // 입력
 		
 		
-		// 사용자가 입력한 이름,나이,성별 가져오기
-		// 모델에 추가하기
-		
+		// 사용자가 입력한 이름,나이,성별 가져오기		
 		String name = textName.getText();
 		String age = textAge.getText();
 		String gender = textGender.getText();
@@ -117,7 +115,7 @@ public class JTableTest3 extends JFrame implements ActionListener{
 		rowdata.add(name);
 		rowdata.add(age);
 		rowdata.add(gender);
-		
+		// 모델에 추가하기
 		model = (DefaultTableModel)table.getModel();
 		model.addRow(rowdata);
 		
