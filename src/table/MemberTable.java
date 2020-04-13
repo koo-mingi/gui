@@ -260,7 +260,8 @@ public class MemberTable extends JFrame implements ActionListener{
 			}else {
 				JOptionPane.showMessageDialog(this, "실패");
 			}
-
+		}
+		Syst.out.println("원격저장소 추가");
 	}
 
 }
