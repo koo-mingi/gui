@@ -34,7 +34,7 @@ public class MemberTable extends JFrame implements ActionListener{
 	private JTable table;
 	private JTextField textField_2;
 	private JTextField textField_3;
-	private JTextField textField_1;
+	private JTextField textdeleteField;
 	private JTable table_1;
 	
 	private MemberDAO dao;
@@ -122,7 +122,7 @@ public class MemberTable extends JFrame implements ActionListener{
 		table = new JTable(model1);
 		JScrollPane scrollPanel = new JScrollPane();
 		scrollPanel.setViewportView(table);
-		panel_1.add(table, BorderLayout.CENTER);
+		panel_1.add(scrollPanel, BorderLayout.CENTER);
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("회원수정", null, panel_2, null);
@@ -158,12 +158,13 @@ public class MemberTable extends JFrame implements ActionListener{
 		JLabel lblNewLabel_4 = new JLabel("회원번호");
 		panel_3.add(lblNewLabel_4);
 		
-		textField_1 = new JTextField();
-		panel_3.add(textField_1);
-		textField_1.setColumns(10);
+		textdeleteField = new JTextField();
+		panel_3.add(textdeleteField);
+		textdeleteField.setColumns(10);
 		
-		JButton btnNewButton_2 = new JButton("삭제");
-		panel_3.add(btnNewButton_2);
+		JButton btnDelete = new JButton("삭제");
+		btnDelete.addActionListener(this);
+		panel_3.add(btnDelete);
 		
 		JPanel panel_6 = new JPanel();
 		tabbedPane.addTab("회원전체조회", null, panel_6, null);
@@ -244,6 +245,21 @@ public class MemberTable extends JFrame implements ActionListener{
 			//table에 따로 model을 할당해 줄 필요가 없다.
 			
 			
+		}else if(e.getActionCommand().equals("삭제")) {
+			// 사용자가 입력한 번호 가져오기
+			int no = Integer.parseInt(textdeleteField.getText());
+						
+			// 해당하는 회원 삭제해주기
+			int result = dao.remove(no);
+			if(result>0) {
+				JOptionPane.showMessageDialog(this, "성공");
+				// 모델이 가지고 있었던 데이터초기화
+				model.setNumRows(0);
+				list();
+				
+			}else {
+				JOptionPane.showMessageDialog(this, "실패");
+			}
 		}
 		
 	}

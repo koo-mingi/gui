@@ -113,4 +113,23 @@ public class MemberDAO {
 		
 		return vo;
 	}
+	
+	// no 값을 이용해서 회원 정보 삭제하기
+	// delete from memberTBL where no=?
+	public int remove(int no) {
+		
+		int result=0;
+		String sql = "delete from memberTBL where no=?";
+		
+		try (Connection con=getConnection();
+			PreparedStatement pstmt = con.prepareStatement(sql)){
+			pstmt.setInt(1, no);
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }
