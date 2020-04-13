@@ -261,7 +261,7 @@ public class MemberTable extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(this, "실패");
 			}
 
-	}
+		}
 
 	}
 }
