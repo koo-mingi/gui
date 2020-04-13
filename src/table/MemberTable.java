@@ -262,6 +262,6 @@ public class MemberTable extends JFrame implements ActionListener{
 			}
 
 		}
-
+		System.out.println("원격저장소 추가");
 	}
 }
