@@ -260,12 +260,7 @@ public class MemberTable extends JFrame implements ActionListener{
 			}else {
 				JOptionPane.showMessageDialog(this, "실패");
 			}
-		}else if(e.getActionCommand().equals("수정")) {
-			
-		}else if(e.getActionCommand().equals("조회2")) {
-			
-		}
-		
+
 	}
 
 }
