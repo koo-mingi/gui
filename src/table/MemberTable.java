@@ -14,6 +14,7 @@ import database.MemberVO;
 import javax.swing.JTabbedPane;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -23,10 +24,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 
-public class MemberTable extends JFrame {
+public class MemberTable extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
-	private JTextField texName;
+	private JTextField textName;
 	private JTextField textAge;
 	private JTextField textGender;
 	private JTextField textField;
@@ -37,7 +38,10 @@ public class MemberTable extends JFrame {
 	private JTable table_1;
 	
 	private MemberDAO dao;
+	//전체조회
 	private DefaultTableModel model;
+	//하나조회
+	private DefaultTableModel model1;
 	/**
 	 * Launch the application.
 	 */
@@ -78,9 +82,9 @@ public class MemberTable extends JFrame {
 		JLabel labelName = new JLabel("이름");
 		panel.add(labelName);
 		
-		texName = new JTextField();
-		panel.add(texName);
-		texName.setColumns(10);
+		textName = new JTextField();
+		panel.add(textName);
+		textName.setColumns(10);
 		
 		JLabel labelAge = new JLabel("나이");
 		panel.add(labelAge);
@@ -112,8 +116,12 @@ public class MemberTable extends JFrame {
 		
 		JButton btnNewButton = new JButton("조회");
 		panel_4.add(btnNewButton);
+		btnNewButton.addActionListener(this);
 		
-		table = new JTable();
+		model1 = getModel();
+		table = new JTable(model1);
+		JScrollPane scrollPanel = new JScrollPane();
+		scrollPanel.setViewportView(table);
 		panel_1.add(table, BorderLayout.CENTER);
 		
 		JPanel panel_2 = new JPanel();
@@ -165,6 +173,17 @@ public class MemberTable extends JFrame {
 		panel_6.add(scrollPane, BorderLayout.CENTER);
 		
 		//memberTBL의 전체 내용을 가져오기
+						
+		table_1 = new JTable(getModel());
+		list();
+		scrollPane.setViewportView(table_1);
+		
+		
+		textGender.addActionListener(this);
+		
+	}
+	
+	public DefaultTableModel getModel() {
 		String columnNames[] = {"번호","이름","나이","성별"};
 		model = new DefaultTableModel(columnNames,0) {
 			@Override
@@ -172,12 +191,7 @@ public class MemberTable extends JFrame {
 				return false;
 			}
 		};
-		
-		
-		table_1 = new JTable(model);
-		list();
-		scrollPane.setViewportView(table_1);
-		
+		return model;
 	}
 	
 	public void list() {
@@ -190,6 +204,47 @@ public class MemberTable extends JFrame {
 			model.addRow(data);
 		}
 		
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		if(e.getSource()==textGender) {
+			// 이름과 나이와 성별을 가져온 후
+			MemberVO vo = new MemberVO();
+			vo.setName(textName.getText());
+			vo.setAge(Integer.parseInt(textAge.getText()));
+			vo.setGender(textGender.getText());
+			
+			// 데이터베이스에 입력하기
+			int result = dao.insert(vo);
+			
+			if(result>0) {
+				JOptionPane.showMessageDialog(this, "성공");
+				// 모델이 가지고 있었던 데이터초기화
+				model.setNumRows(0);
+				list();
+			}else {
+				JOptionPane.showMessageDialog(this, "실패");
+			}
+		}else if(e.getActionCommand().equals("조회")) {
+			//사용자가 입력한 번호 가져오기
+			int no = Integer.parseInt(textField.getText());
+			
+			
+			//번호에 해당하는 정보 가져온 후 보여주기
+			MemberVO vo = dao.getRow(no);
+			
+			Object[] data = {vo.getNo(),vo.getName(),vo.getAge(),vo.getGender()};
+			model1 = (DefaultTableModel) table.getModel();
+			model1.setNumRows(0); //모델이 가지고 있던 데이터 초기화
+			model1.addRow(data); //모델에 가져온 데이터 넘기기
+			//table에는 getModel()을 통해서 model 객체가 넘어가 있는 상태이기 때문에
+			//table에 따로 model을 할당해 줄 필요가 없다.
+			
+			
+		}
 		
 	}
 
